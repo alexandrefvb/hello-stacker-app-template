@@ -1,42 +1,29 @@
-name: hello-stacker-template
-description: Python example template to crate an app that prints "Hello stacker!"
+name: hello-stacker-app
+description: Python example template to crate an app that prints a greeting message to stacker
 types:
   - app-template
 inputs:
   - label: Project name
     type: text
     name: project_name
-    default: project-name
-# lifecycle block to configure commands to execute when user run "stk deploy"
+
+  - label: Greeting message to use
+    type: text
+    name: greeting_message
+    default: Hello
+    items:
+      - Hello
+      - Whats up
+      - Hi
+      - Good morning
 lifecycle:
   deploy:
-    # Optional supported os definition. When not informed support all OSes
     supported-os:
       - windows
       - linux
       - mac
-    # Optional block to define requirements checks before execute deploy command
     requirements-check:
-      # each requirement check is a block with a command 
-      # and an information shown to user when command return code is not 0
-      npm-example:
-        # in this example the check-command is common for all OSes
-        check-command: npm --version
-        info: npm is is not installed
-      other-dependency-example:
-        # in this example the check-command is os dependent
-        check-command:
-          windows: cmd -c scripts\verify-dependency.bat
-          linux: sh scripts/verify-dependency.sh
-          mac: sh scripts/verify-dependency.sh
-        info: other dependency is not installed
-    # Deploy command to execute when dependencies are ok
-    # can be a string when the command is not os dependent or a 
-    # command by os like check-command example. 
-    # The ${stage} placeholder is replaced by stage informed to os deploy command
-    deploy-command: npx cdk deploy ${stage}
-    # example with os dependent deploy command 
-    #deploy-command:
-    #  windows: cmd -c scripts\deploy.bat
-    #  linux: sh ./scripts/deploy.sh
-    #  mac: sh ./scripts/deploy.sh
+      python:
+        check-command: python --version
+        info: python is is not installed
+    deploy-command: python main.py ${stage}
